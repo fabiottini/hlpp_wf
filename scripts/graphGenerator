@@ -1,0 +1,66 @@
+#!/bin/bash
+
+GRAPH_TITLE="$1"
+GRAPH_X="$2"
+GRAPH_Y="$3"
+IF_PLOT_FX=$4
+INPUT_FILENAME="$5"
+OUTPUT_FILENAME="$6"
+BW_ID=$7
+BW_ID_YPLOT=$(bc <<< "scale=2; $BW_ID+20");
+
+#echo $BW_ID
+
+gnuplot <<- EOF
+
+#set title "$GRAPH_TITLE"
+set xlabel "$GRAPH_X"
+set ylabel "$GRAPH_Y"
+
+set xtics 1
+
+set term tikz
+
+set key above
+
+set linetype 1 dashtype ' - - '
+set style line 3 lc rgb 'black' lt 1 lw 2;
+
+
+set style line 5 lt rgb "#4d4d4d" lw 3 pt 6
+set style line 1 lt rgb "#a0a0a0" lw 1 pt 1
+set style line 4 lt 2 lc rgb "#7F7F7F"  lw 3 
+
+
+set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+
+if ($BW_ID > 0){
+	set yrange [0:$BW_ID_YPLOT]
+}else{
+	set yrange [0:]
+}
+
+set terminal pngcairo font "Arial,20"
+##set terminal png
+
+f(x) = x
+
+set xrange [0:]
+
+set output "$OUTPUT_FILENAME"
+
+if ($IF_PLOT_FX == 1){
+   plot "$INPUT_FILENAME" using 0:2:xtic(1) with linespoints notitle ls 5,\
+   					   '' using 0:f(x):xtic(1) with linespoints title "ideal" ls 3
+}else{
+	if ($BW_ID > 0){
+   		plot "$INPUT_FILENAME" using 0:2:xtic(1) with linespoints notitle ls 5,\
+   			 "$INPUT_FILENAME" using 0:3:xtic(1) with linespoints title "IDEAL BW" ls 3
+    }else{
+   		plot "$INPUT_FILENAME" with linespoints notitle ls 5
+    }
+   #plot "$INPUT_FILENAME" with linespoints notitle ls 5
+}
+
+EOF

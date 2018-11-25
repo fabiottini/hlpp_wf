@@ -1,0 +1,246 @@
+#!/bin/bash
+
+OVERWRITE=$2 #0 no OVERWRITE
+INIT="$3";
+PRINT_FRAG=$1
+SLIDEVAL=$4
+SLIDEVAL=$(bc <<< "scale=2; $SLIDEVAL*0.001");
+
+#echo $SLIDEVAL
+INPUT="testDone2/"$INIT".txt";
+
+## VARS
+TC_1=0;
+FIRST_RUN=0;
+
+TC=0;
+WORKER=0;
+RESULTS=0;
+TOT_AVG_LATENCY=0;
+PARTIAL_AVG_CALC_LATENCY=0;
+TOT_AVG_CALC_LATENCY=0;
+WIN_LENGTH=0;
+SLIDE=0;
+
+CONTA=1
+CURRENT_WID=0
+
+
+GROUP_COUNT=0;
+SCALABILITY=0;
+BW=0;
+FRAGMENTATION=0;
+MCD=0;
+
+
+SEPARATOR="____________________________________________________________________________________________________________";
+SEPARATOR_FOUND=0;
+
+DESTINATION_FOLDER="graphData2/";
+DESTINATION_FOLDER_GRAPH="graphs2/"
+
+PLOT_TYPE="png"
+
+FILE_TC=$DESTINATION_FOLDER$INIT"_TCOMPL.txt";
+FILE_TCALC=$DESTINATION_FOLDER$INIT"_TCALC.txt";
+FILE_AVGTCALC=$DESTINATION_FOLDER$INIT"_AVGTCALC.txt";
+FILE_SC=$DESTINATION_FOLDER$INIT"_SCALABILITY.txt";
+FILE_BW=$DESTINATION_FOLDER$INIT"_BW.txt";
+FILE_LAT=$DESTINATION_FOLDER$INIT"_LAT.txt";
+FILE_FRAG=$DESTINATION_FOLDER$INIT"_FRAG.txt";
+
+PLOT_TC=$DESTINATION_FOLDER_GRAPH$INIT"_TCOMPL."$PLOT_TYPE;
+PLOT_TCALC=$DESTINATION_FOLDER_GRAPH$INIT"_TCALC."$PLOT_TYPE;
+PLOT_SC=$DESTINATION_FOLDER_GRAPH$INIT"_SCALABILITY."$PLOT_TYPE;
+PLOT_BW=$DESTINATION_FOLDER_GRAPH$INIT"_BW."$PLOT_TYPE;
+PLOT_LAT=$DESTINATION_FOLDER_GRAPH$INIT"_LAT."$PLOT_TYPE;
+
+
+FILE_STATUS=""
+
+function mcdEuclide()
+{
+  if [ $2 -eq 0 ]; then
+    MCD=$1
+    return $1
+  else
+    mcdEuclide $2 $(($1%$2))
+    # calling function recursively
+  fi
+}
+
+function getFileStatus(){
+  echo ${FILE_STATUS[$1]};
+}
+
+
+function checkOverWriteFile()
+{
+  if [ -a $1 ]; then #se esiste il file
+    echo $OVERWRITE
+  else
+    echo 1;
+  fi
+}
+
+function writeOnFile(){
+  if [ $(checkOverWriteFile $2)  -eq 1 ]; then
+    echo "$1" > "$2";
+  fi
+}
+
+function appendOnFile(){
+  if [ ${FILE_STATUS[$1]} -eq 1 ]; then
+    echo $2 >> $3;
+  fi
+}
+
+function setFileStatus(){
+  FILE_STATUS[0]=$(checkOverWriteFile "$FILE_TC")
+  FILE_STATUS[1]=$(checkOverWriteFile "$FILE_TCALC")
+  FILE_STATUS[2]=$(checkOverWriteFile $FILE_AVGTCALC)
+  FILE_STATUS[3]=$(checkOverWriteFile $FILE_BW)
+  FILE_STATUS[4]=$(checkOverWriteFile $FILE_LAT)
+  FILE_STATUS[5]=$(checkOverWriteFile "$FILE_SC")
+
+  if [ $(checkOverWriteFile $FILE_FRAG) -eq 1 ] && [ $PRINT_FRAG -eq 1 ];     then
+    FILE_STATUS[6]=1
+  else
+    FILE_STATUS[6]=0
+  fi
+}
+
+
+
+setFileStatus
+
+
+
+## RESET FILE
+writeOnFile "" $FILE_TC
+writeOnFile "0 0" $FILE_SC
+writeOnFile "" $FILE_BW
+writeOnFile "" $FILE_LAT
+writeOnFile "" $FILE_AVGTCALC
+writeOnFile "" $FILE_TCALC
+
+
+if [ $PRINT_FRAG -eq 1 ]; then
+  writeOnFile "" $FILE_FRAG
+fi
+
+while read -r -a arr
+do
+  ## IDENTIFY A RESULTS AREA
+  if [ "${arr[0]}" == "$SEPARATOR" ] && [ $SEPARATOR_FOUND -eq 1 ]; then
+
+    ##### TC=${TC//./,};
+    if [ $FIRST_RUN -eq 0 ]; then
+      TC_1="$TC";
+      FIRST_RUN=1;
+    fi
+    SCALABILITY=$(bc <<< "scale=2; $TC_1/$TC");
+    BW=$(bc <<< "scale=2; $RESULTS/$TC");
+    BW_ID=$(bc <<< "scale=2; 1/$SLIDEVAL");
+    
+    # echo "SCALABILITY: "$SCALABILITY;
+    #echo "BW: "$BW;
+    # echo "TC: $TC";
+    # echo "#W: $WORKER";
+    # echo "TC_1: $TC_1";
+
+    TOT_AVG_CALC_LATENCY=$(bc <<< "scale=2; $TOT_AVG_CALC_LATENCY+$PARTIAL_AVG_CALC_LATENCY");
+    let GROUP_COUNT=$GROUP_COUNT+1;
+
+# echo "pippo"
+# echo "$WORKER $TC"
+# echo $FILE_TC
+
+    if [ ! $CONTA -eq $WORKER ]; then 
+      appendOnFile 5 $CONTA $FILE_SC
+      CONTA=$(( $CONTA + 1 ))
+    fi
+      CONTA=$(( $CONTA + 1 ))
+
+    appendOnFile 0 "$WORKER $TC" $FILE_TC
+    appendOnFile 5 $WORKER" "$SCALABILITY $FILE_SC
+    appendOnFile 3 $WORKER" "$BW" "$BW_ID $FILE_BW 
+    appendOnFile 4 $WORKER" "$TOT_AVG_LATENCY $FILE_LAT
+    appendOnFile 1 $WORKER" "$PARTIAL_AVG_CALC_LATENCY $FILE_TCALC
+
+    SEPARATOR_FOUND=0;
+
+   # CONTA=$(( $CONTA + 1 ))
+   # echo $WORKER"     "$CONTA
+
+  elif [ "${arr[0]}" == "$SEPARATOR" ]; then
+    SEPARATOR_FOUND=1;
+  fi
+
+  if [ $SEPARATOR_FOUND -eq 1 ]; then
+    ## RECOVERY COMPLETATION TIME
+    if [ ${#arr[@]} -eq 15 ]; then
+      TC="${arr[2]}";
+    elif [ ${#arr[@]} -eq 13 ]; then
+      TC="${arr[2]}";
+    fi
+    #echo $TC
+    ## RECOVERY WORKER NUMBER
+    if [ "${arr[0]}" == "->" ]; then
+      WORKER="${arr[2]}";
+      WIN_LENGTH="${arr[3]}";
+      SLIDE="${arr[4]}";
+      mcdEuclide $WIN_LENGTH $SLIDE
+    fi
+    ## RETRIEVE THE RESULTS NUMBER
+    if [ "${arr[0]}" == "COLLECTOR:" ]; then
+      RESULTS="${arr[2]}";
+    fi
+    ## RETRIEVE THE TOT LATENCY VAL
+    if [ "${arr[0]}" == "AVG_TOT_LATENCY:" ]; then
+      TOT_AVG_LATENCY="${arr[1]}";
+    fi
+    ## RETRIEVE THE TOT CALC LATENCY VAL
+    if [ "${arr[0]}" == "AVG_TOT_CALC_LATENCY:" ]; then
+      PARTIAL_AVG_CALC_LATENCY="${arr[1]}";
+    fi
+  fi
+
+
+done < $INPUT
+
+
+TOT_AVG_CALC_LATENCY=$(bc <<< "scale=2; $TOT_AVG_CALC_LATENCY/$GROUP_COUNT");
+appendOnFile 2 "$TOT_AVG_CALC_LATENCY" $FILE_AVGTCALC
+
+if [ $PRINT_FRAG -eq 1 ]; then
+  FRAGMENTATION=$(bc <<< "scale=2; $WIN_LENGTH/$MCD");
+  appendOnFile 6 "$FRAGMENTATION" $FILE_FRAG
+fi
+
+if [ $(getFileStatus 0) -eq 1 ]; then
+  #TEMPO COMPLETAMENTO
+  ./scripts/graphGenerator "Completation Time" "nw" "Tc (sec)" 0 "$FILE_TC" "$PLOT_TC" 0
+fi
+
+if [ $(getFileStatus 1) -eq 1 ]; then
+  #TEMPO CALCOLO
+  ./scripts/graphGenerator "Computation Time" "nw" "Tcalc (usec)" 0 "$FILE_TCALC" "$PLOT_TCALC" 0
+fi
+
+if [ $(getFileStatus 3)  -eq 1 ]; then
+  #SCALABILITY
+  ./scripts/graphGenerator "Scalability" "nw" "Scalability" 1 "$FILE_SC" "$PLOT_SC" 0
+fi
+
+if [ $(getFileStatus 4) -eq 1 ]; then
+  #BW
+  ./scripts/graphGenerator "Bandwith" "nw" "Bw (#Window/sec.)" 0 "$FILE_BW" "$PLOT_BW" $BW_ID
+ # echo "$FILE_BW"
+ # echo "./scripts/graphGenerator \"Bandwith\" \"nw\" \"Bw (#Window/sec.)\" 0 \"$FILE_BW\" \"$PLOT_BW\" $BW_ID"
+fi
+
+if [ $(getFileStatus 5) -eq 1 ]; then
+  #Latency
+  ./scripts/graphGenerator "Latency" "nw" "Latency (usec)" 0 "$FILE_LAT" "$PLOT_LAT" 0
+fi

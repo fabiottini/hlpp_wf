@@ -1,0 +1,79 @@
+#!/bin/bash
+
+
+# ./scripts/tester agnostic 1000 100 100000 1 13 2; sleep 30;
+# ./scripts/tester active 1000 100 100000 1 13 2; sleep 30;
+# ./scripts/tester agnostic 5000 50 100000 1 13 2; sleep 30;
+# ./scripts/tester active 5000 50 100000 1 13 2; sleep 30;
+# ./scripts/tester agnostic 5000 100 100000 1 13 2; sleep 30;
+# ./scripts/tester active 5000 100 100000 1 13 2; sleep 30;
+# ./scripts/tester agnostic 5200 150 100000 1 13 2; sleep 30;
+# ./scripts/tester active 5200 150 100000 1 13 2; sleep 30;
+# ./scripts/tester agnostic 3000 50 100000 1 13 2; sleep 30;
+# ./scripts/tester active 3000 50 100000 1 13 2; sleep 30;
+# ./scripts/tester agnostic 10000 100 100000 1 13 2; sleep 30;
+# ./scripts/tester active 10000 100 100000 1 13 2; sleep 30;
+
+
+# echo "./scripts/tester agnostic 1000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 1000 100 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 1000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 1000 100 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester agnostic 5000 50 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 5000 50 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 5000 50 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 5000 50 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester agnostic 5000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 5000 100 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 5000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 5000 100 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester agnostic 5200 150 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 5200 150 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 5200 150 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 5200 150 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester agnostic 3000 50 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 3000 50 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 3000 50 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 3000 50 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester agnostic 10000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 10000 100 100000b50000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 10000 100 100000b50000 1 13 2; sleep 30;"
+# ./scripts/tester active 10000 100 100000b50000 1 13 2; sleep 30;
+#
+#
+#
+#
+# echo "./scripts/tester agnostic 1000 100 100000b10000 1 13 2; sleep 30;"
+# ./scripts/tester agnostic 1000 100 100000b10000 1 13 2; sleep 30;
+#
+# echo "./scripts/tester active 1000 100 100000b10000 1 13 2; sleep 30;"
+# ./scripts/tester active 1000 100 100000b10000 1 13 2; sleep 30;
+
+echo "./scripts/tester agnostic 1000 10 100000 1 13 2; sleep 30;"
+./scripts/tester agnostic 1000 10 100000 1 13 2; sleep 30;
+
+echo "./scripts/tester active 1000 10 100000 1 13 2; sleep 30;"
+./scripts/tester active 1000 10 100000 1 13 2; sleep 30;
+
+echo "./scripts/tester agnostic 1000 10 100000b10000 1 13 2; sleep 30;"
+./scripts/tester agnostic 1000 10 100000b10000 1 13 2; sleep 30;
+
+echo "./scripts/tester active 1000 10 100000b10000 1 13 2; sleep 30;"
+./scripts/tester active 1000 10 100000b10000 1 13 2; sleep 30;
+
+echo "./scripts/tester agnostic 1000 10 100000b50000 1 13 2; sleep 30;"
+./scripts/tester agnostic 1000 10 100000b50000 1 13 2; sleep 30;
+
+echo "./scripts/tester active 1000 10 100000b50000 1 13 2; sleep 30;"
+./scripts/tester active 1000 10 100000b50000 1 13 2; sleep 30;

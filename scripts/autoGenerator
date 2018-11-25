@@ -1,0 +1,39 @@
+#!/bin/bash
+
+OVERWRITE=$1
+ISSBT=$2
+IFEXISTS=0
+if [ -z ${OVERWRITE} ]; then
+  OVERWRITE=0
+fi
+if [ -z $ISSBT ]; then
+  ISSBT=0
+fi
+
+DIR_GRAPH_DATA="testDone2/"
+ALL_FILES_FRAG=$(ls $DIR_GRAPH_DATA*.txt)
+
+for i in $ALL_FILES_FRAG; do
+  IFS='/' read -a arr <<< "$i"
+  IFS='.' read -a arr <<< "${arr[1]}"
+  FILENAME="${arr[0]}"
+  IFS='_' read -a arr <<< "$FILENAME"
+  SLIDE=${arr[5]}
+
+
+
+  SLIDE=$(echo $SLIDE | sed 's/[^0-9]//g' )
+  if [ $ISSBT -eq 1 ]; then
+    SLIDE=$(bc <<< "scale=2; $SLIDE*0.01");
+  fi
+
+  echo "./scripts/tester2graph 1 $OVERWRITE $FILENAME"
+
+  if [ "${arr[0]}" == "agnostic" ]; then
+    ./scripts/tester2graph 1 $OVERWRITE $FILENAME $SLIDE
+  else
+    ./scripts/tester2graph 0 $OVERWRITE $FILENAME $SLIDE
+  fi
+
+done
+#./scripts/fragmentation

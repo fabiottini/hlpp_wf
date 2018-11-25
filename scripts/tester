@@ -1,0 +1,82 @@
+#!/bin/bash
+
+#INPUT VARS
+TYPE=$1
+WIN_SIZE=$2
+SLIDE=$3
+RATE=$4
+DEBUG=0 #$5
+START_WORKER=$5
+MAX_WORKER=$6
+INC_WORKER=$7
+COLOR=0
+DISORDER=0
+
+#COMMAND="./bin/test_wf_"$TYPE"_sw"
+COMMAND="./bin/test_wf_"$TYPE"_sbt"
+
+COUNTER=$START_WORKER
+FIRST=1
+
+SEPARATOR="____________________________________________________________________________________________________________"
+
+DATASET_FOLDER="dataSet/"
+
+if   [ "$RATE" == "10000" ]; then
+	MAX_TUPLES=10000
+	DATASET=$DATASET_FOLDER"dataset_10M_10Kts_1.bin"
+elif [ "$RATE" == "30000" ]; then
+	MAX_TUPLES=30000
+	DATASET=$DATASET_FOLDER"dataset_30M_30Kts_i0_4.bin"
+elif [ "$RATE" == "50000" ]; then
+	MAX_TUPLES=50000
+	DATASET=$DATASET_FOLDER"dataset_50M_50Kts_i0_4.bin"
+elif [ "$RATE" == "100000" ]; then
+	MAX_TUPLES=100000
+	DATASET=$DATASET_FOLDER"dataset_100M_100Kts_i0_4.bin"
+elif [ "$RATE" == "100000b5000" ]; then
+	MAX_TUPLES=100000
+	DISORDER=5000
+	DATASET=$DATASET_FOLDER"dataset_100M_100Kts_i5000_4.bin"
+elif [ "$RATE" == "100000b10000" ]; then
+	MAX_TUPLES=100000
+	DISORDER=10000
+	DATASET=$DATASET_FOLDER"dataset_100M_100Kts_i10000_4.bin"
+elif [ "$RATE" == "100000b50000" ]; then
+	MAX_TUPLES=100000
+	DISORDER=50000
+	DATASET=$DATASET_FOLDER"dataset_100M_100Kts_i50000_4.bin"
+fi
+
+
+#TESTNAME=$TYPE"_"$COUNTER"-"$MAX_WORKER"_r"$MAX_TUPLES"_i"$DISORDER"_w"$WIN_SIZE"_s"$SLIDE
+TESTNAME=$TYPE"_"$COUNTER"-"$MAX_WORKER"_r"$MAX_TUPLES"_i"$DISORDER"_w"$WIN_SIZE"_s"$SLIDE"_sbt"
+FILENAME="testDone/"$TESTNAME".txt"
+
+echo "" &> $FILENAME
+
+while [  $COUNTER -le $MAX_WORKER ]; do
+
+	echo "START TEST: "$COUNTER" - ["$(date -u)"]"
+
+	printf "\n" >> $FILENAME ;
+	echo $SEPARATOR >> $FILENAME;
+	echo "START (W:"$COUNTER"): "$(date -u) >> $FILENAME
+	printf "\n" >> $FILENAME ;
+
+	echo "-> $COMMAND $COUNTER $WIN_SIZE $SLIDE $MAX_TUPLES $DATASET $DEBUG $COLOR"  >> $FILENAME ;
+	stdbuf -oL $COMMAND $COUNTER $WIN_SIZE $SLIDE $MAX_TUPLES $DATASET $DEBUG $COLOR >> $FILENAME ;
+
+	printf "\n" >> $FILENAME ;
+	echo "END   (W:"$COUNTER"): "$(date -u) >> $FILENAME
+	echo $SEPARATOR >> $FILENAME;
+	printf "\n" >> $FILENAME ;
+
+	let COUNTER=COUNTER+$INC_WORKER ;
+
+	sleep 10
+done
+echo "RESULTS IN: "$FILENAME
+
+#echo "CREATE GRAPHS: "
+#./scripts/tester2graph $FILENAME $TESTNAME

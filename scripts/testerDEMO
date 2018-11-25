@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#INPUT VARS
+TYPE=$1
+WIN_SIZE=$2
+SLIDE=$3
+RATE=$4
+DEBUG=0 #$5
+
+COMMAND="./bin/test_wf_"$TYPE"_sw"
+
+COUNTER=$START_WORKER
+FIRST=1
+
+FILENAME="testDone/"$TYPE"_r"$RATE"_w"$WIN_SIZE"_s"$SLIDE".txt"
+DATASET_FOLDER="dataSet/"
+
+#
+
+if   [ $RATE -eq 10000 ]; then
+	MAX_TUPLES=10000
+	DATASET=$DATASET_FOLDER"dataset_10M_10Kts_1.bin"
+elif [ $RATE -eq 30000 ]; then
+	MAX_TUPLES=30000
+	DATASET=$DATASET_FOLDER"dataset_30M_30Kts_i0_4.bin"
+elif [ $RATE -eq 50000 ]; then
+	MAX_TUPLES=50000
+	DATASET=$DATASET_FOLDER"dataset_50M_50Kts_i0_4.bin"
+elif [ $RATE -eq 100000 ]; then
+	MAX_TUPLES=100000
+	DATASET=$DATASET_FOLDER"dataset_100M_100Kts_i0_4.bin"
+fi
+
+echo "START (W:"$COUNTER"): "$(date -u) >> $FILENAME
+echo "-> $COMMAND $COUNTER $WIN_SIZE $SLIDE $MAX_TUPLES $DATASET $DEBUG"  >> $FILENAME ;
+stdbuf -oL $COMMAND $COUNTER $WIN_SIZE $SLIDE $MAX_TUPLES $DATASET $DEBUG >> $FILENAME ;
+echo "END (W:"$COUNTER"): "$(date -u) >> $FILENAME
+
+printf "\n\n" >> $FILENAME ;
+
+done

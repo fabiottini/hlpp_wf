@@ -1,0 +1,69 @@
+#!/bin/bash
+
+###### BW #####
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s100_BW.txt" "active_1-13_r100000_i0_w3000_s50_BW.txt" 1 "BW" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s100_BW.txt" "agnostic_1-13_r100000_i0_w3000_s50_BW.txt" 1 "BW" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s50_BW.txt" "agnostic_1-13_r100000_i0_w1000_s10_BW.txt" 1 "BW" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s50_BW.txt" "active_1-13_r100000_i0_w1000_s10_BW.txt" 1 "BW" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+
+###### SCALABILITY #####
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s100_SCALABILITY.txt" "agnostic_1-13_r100000_i0_w3000_s50_SCALABILITY.txt" 1 "SCALABILITY" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s100_SCALABILITY.txt" "active_1-13_r100000_i0_w3000_s50_SCALABILITY.txt" 1 "SCALABILITY" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+
+
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s50_SCALABILITY.txt" "agnostic_1-13_r100000_i0_w1000_s10_SCALABILITY.txt" 1 "SCALABILITY" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s50_SCALABILITY.txt" "active_1-13_r100000_i0_w1000_s10_SCALABILITY.txt" 1 "SCALABILITY" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+
+###### LATENCY #####
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s100_LAT.txt" "agnostic_1-13_r100000_i0_w3000_s50_LAT.txt" 0 "LAT" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s100_LAT.txt" "active_1-13_r100000_i0_w3000_s50_LAT.txt" 0 "LAT" "win:5000ms slide:100ms" "win:3000ms slide:50ms"
+
+
+
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s50_LAT.txt" "agnostic_1-13_r100000_i0_w1000_s10_LAT.txt" 0 "LAT" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s50_LAT.txt" "active_1-13_r100000_i0_w1000_s10_LAT.txt" 0 "LAT" "win:5000ms slide:50ms" "win:1000ms slide:10ms"
+
+
+
+###### TCALC #####
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s100_TCALC.txt" "agnostic_1-13_r100000_i0_w3000_s50_TCALC.txt" 0 "TCALC" "win:5000ms slide:100ms" "win:3000ms slide:50ms" 50 800
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s100_TCALC.txt" "active_1-13_r100000_i0_w3000_s50_TCALC.txt" 0 "TCALC" "win:5000ms slide:100ms" "win:3000ms slide:50ms" 50 800
+
+
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s50_TCALC.txt" "agnostic_1-13_r100000_i0_w1000_s10_TCALC.txt" 0 "TCALC" "win:5000ms slide:50ms" "win:1000ms slide:10ms" 50 800
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s50_TCALC.txt" "active_1-13_r100000_i0_w1000_s10_TCALC.txt" 0 "TCALC" "win:5000ms slide:50ms" "win:1000ms slide:10ms" 50 800
+
+
+###### TCOMPL #####
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s100_TCOMPL.txt" "agnostic_1-13_r100000_i0_w3000_s50_TCOMPL.txt" 0 "TCOMPL" "win:5000ms slide:100ms" "win:3000ms slide:50ms" 50 900
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s100_TCOMPL.txt" "active_1-13_r100000_i0_w3000_s50_TCOMPL.txt" 0 "TCOMPL" "win:5000ms slide:100ms" "win:3000ms slide:50ms" 50 900
+
+
+
+./scripts/mixedGraph2.sh "agnostic_1-13_r100000_i0_w5000_s50_TCOMPL.txt" "agnostic_1-13_r100000_i0_w1000_s10_TCOMPL.txt" 0 "TCOMPL" "win:5000ms slide:50ms" "win:1000ms slide:10ms" 50 1400
+
+./scripts/mixedGraph2.sh "active_1-13_r100000_i0_w5000_s50_TCOMPL.txt" "active_1-13_r100000_i0_w1000_s10_TCOMPL.txt" 0 "TCOMPL" "win:5000ms slide:50ms" "win:1000ms slide:10ms" 50 1400
+

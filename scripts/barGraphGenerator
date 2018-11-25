@@ -1,0 +1,93 @@
+#!/bin/bash
+
+GRAPH_TITLE="$1"
+GRAPH_X="$2"
+GRAPH_Y="$3"
+IF_PLOT_FX=$4
+INPUT_FILENAME="$5"
+OUTPUT_FILENAME="$6"
+LABEL_TITLE=$7
+LABEL_POSITION=$8
+TEST_NAME=$9
+MAX_X_VAL=${10}
+MAX_Y_VAL=${11}
+LINEACTIVE=${12}
+
+MAX_Y_VAL=$((${MAX_Y_VAL%.*}+10))
+MAX_X_VAL=$((${MAX_X_VAL%.*}+3))
+
+IFS='#' read -r -a LABEL_TITLE <<< $LABEL_TITLE
+IFS='#' read -r -a LABEL_POSITION <<< $LABEL_POSITION
+IFS='#' read -r -a TEST_NAME <<< $TEST_NAME
+
+IFS=' ' read -r -a LABEL_TITLE <<< $LABEL_TITLE
+IFS=' ' read -r -a LABEL_POSITION <<< $LABEL_POSITION
+IFS=' ' read -r -a TEST_NAME <<< $TEST_NAME
+
+TITLE_NUM="${#LABEL_TITLE[@]}"
+
+gnuplot <<- EOF
+
+set title "$GRAPH_TITLE"
+set xlabel "$GRAPH_X"
+set ylabel "$GRAPH_Y"
+
+set xtics 1
+
+set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+
+set style line 10 lc rgb "black" lw 10
+set style line 5 lt rgb "red" lw 3 pt 6
+set style line 3 lt rgb "#4d4d4d" lw 1 pt 1
+set style line 1 lt rgb "#4d4d4d" lw 3 pt 1
+set style line 2 lt rgb "#a0a0a0" lw 1 pt 1
+
+set style fill solid 1.0 border lc rgb "gray50"
+set boxwidth 1
+
+#set key font ",18"
+
+set terminal pngcairo font 'Verdana,20' size 1024,768 enhanced
+##set terminal png
+
+set key above center width 2;
+#set key outside;
+#set key horizontal center bottom linewidth 100;
+
+
+maxX="${MAX_X_VAL[*]}"
+maxY="${MAX_Y_VAL[*]}"
+
+set xrange [-1:maxX]
+set yrange [90:maxY]
+
+
+title="${LABEL_TITLE[*]}"
+title_pos="${LABEL_POSITION[*]}"
+test_name="${TEST_NAME[*]}"
+unset xtics
+set xtics format " "
+
+do for [i=1:$TITLE_NUM] {
+  labelPos=word(title_pos,i)-1
+  set xtics add(word(title, i) word(title_pos,i))
+  set label word(test_name, i) at labelPos, 20 rotate by 60 front font "Verdana,8"
+}
+#set xtics ("label" 0.5, "label2" 3.5, "bar label" 6.5,)
+
+set output "$OUTPUT_FILENAME"
+f(v)=v<0?1:2
+
+if( $LINEACTIVE > 0 ){
+	if ( $LINEACTIVE == 1 ){
+		plot "$INPUT_FILENAME"  every 2::1 using 1:2 w boxes ls 2 title "AGNOSTIC", \
+		     "$INPUT_FILENAME" every 2 using 1:2 w line ls 1 title "ACTIVE"
+	}else{
+		plot "$INPUT_FILENAME"  using 1:2 w boxes ls 2 notitle
+	}
+}else{
+	plot "$INPUT_FILENAME"  every 2::1 using 1:2 w boxes ls 2 title "AGNOSTIC", \
+     	 "$INPUT_FILENAME" every 2 using 1:2 w boxes ls 3 title "ACTIVE"
+}
+EOF

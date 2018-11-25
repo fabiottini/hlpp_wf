@@ -1,0 +1,18 @@
+#!/bin/bash
+
+INPUT=myfile.txt
+OLDIFS=$IFS
+IFS=,
+[ ! -f $INPUT ] && { echo "$INPUT file not found"; exit 99; }
+while read -r -a arr
+do
+	TIPO  = "${arr[0]}"
+	WSIZE = "${arr[1]}"
+	SLIDE = "${arr[2]}"
+	for ((i=1; i<="${arr[@]}"; i++));
+	do
+		:
+		#echo $i
+	done
+done < $INPUT
+IFS=$OLDIFS
