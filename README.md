@@ -4,7 +4,7 @@
 
 # Thesis
 
-* https://github.com/fabiottini/hlpp_wf/thesis/thesis_lucattini_fabio.pdf
+* https://github.com/fabiottini/hlpp_wf/blob/master/thesis/thesis_lucattini_fabio.pdf
 
 # Related article
 
