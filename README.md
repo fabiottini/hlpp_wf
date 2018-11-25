@@ -2,6 +2,15 @@
 
 * Fabio Lucattini 
 
+# Thesis
+
+* https://github.com/fabiottini/hlpp_wf/thesis/thesis_lucattini_fabio.pdf
+
+# Related article
+
+* http://pages.di.unipi.it/mencagli/publications/preprint-jpdc-2017.pdf
+* https://www.sciencedirect.com/science/article/pii/S0743731517302976
+
 # Description
 
 In this work we analyze the different types of sliding windows and we classify them in order to understand how to exploit parallelism. Our model is based on the parallel execution of different windows among different in order units, because windows are usually executed independently with each other. Different types of windows have different effect on parallelism, so our implementations must be properly re-adapted to each case.
@@ -14,3 +23,6 @@ The other approach we implemented (agnostic workers model ) is more “tra- diti
 
 In the work we have developed some benchmarks with different window types and we have evaluated the two implementation of the pattern with the Fast-Flow framework. It is a C++ framework for streaming programming devel- oped by the Parallel Programming Research Group at the Computer Science Department of the University of Pisa.
 For the window types that can be processed with both approaches we have analyzed and compared the two alternative approaches to discover which is eventually the best implementation with respect to the windowing configura- tion parameters. As expected, the two models have similar behaviors, even if the active one has an higher bandwidth due to lower internal overhead. The agnostic model remains, however, an interesting solution since it is able to achieve better load balancing and it is applicable to all the window types.
+
+# How to use
+
